@@ -115,7 +115,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
 ### new
 - create the route 
     ```
-    router.get('/fruits/new', (req, res) => {
+    router.get('/url/new', (req, res) => {
         res.render('new.ejs')
     })
     ```
@@ -139,7 +139,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
     ```
     router.post('/', (req, res) => {  
         varName.push(req.body)
-        res.redirect('/fruits') 
+        res.redirect('/url') 
     })
     ```
     - pushes data from form into varName and redirects to index
@@ -159,13 +159,13 @@ Restful routes are a convention for certain URL pathways to do certain things.
     ```
     router.get('/url/:itemIndex', (req, res) => {
         res.render('show.ejs', {
-            oneItem: varName[req.params.itenIndex],
-            index: req.params.capyIndex
+            oneItem: varName[req.params.itemIndex],
+            index: req.params.itemIndex
     })
     ```
 - create the .ejs and access the specific object with the index passed
     ```
-        <p>The Capy at index <%=index%> is: oneItem.name</p>
+        <p>The item at index <%=index%> is: oneItem.name</p>
     ```
 - [back to table](#Restful-routes)
 ### edit
@@ -187,8 +187,8 @@ Restful routes are a convention for certain URL pathways to do certain things.
                 <label for="name">Name:</label>
                 <input name="name" type="text" value="<%= varName.name %>">
                 <br>        
-                <label for="cute">cute?</label>
-                <input name="cute" type="checkbox" <%= varName.value ? "checked" : "" %>>
+                <label for="checkbox_var">cute?</label>
+                <input name="checkbox_var" type="checkbox" <%= varName.value ? "checked" : "" %>>
                 <br>
                 <input type="submit" value="Update Item">
             </form>
