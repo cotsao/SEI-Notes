@@ -2,27 +2,28 @@
 
 -  [Create New Server](#Create-New-Server)
 -  [Setup](#Setup)
-
 -  [MVC Practicies](#MVC-Practices)
-
-
 -  [Restful Routes](#Restful-routes)
 -  [Optional](#Optional)
 -  [Linking](#Linking)
 ## Create-New-Server
 1. npm init
+    - create new npm package
 2. npm install express
+    - install express
 3. npm install ejs
+    - install ejs
 4. npm install method-override
-5. npm install
+    - install necessary package to use methods that aren't 'get' and 'post'
+5. npm install 
     - installs dependencies in package.json
+    - not needed if creating new server from scratch
 ## Setup
 - Server.js
     - required modules
         ```
-        const express = require('express')        
+        const express = require('express')         
         const methodOverride = require('method-override');
-        const rowdy = require('rowdy-logger') (optional rowdy)
         ```
     - database and models
          ```
@@ -31,22 +32,20 @@
          ```
     - variables
         ```
-        const app = express()
+        const app = express() 
         const port = 4000
-        const rowdyResults = rowdy.begin(app)
         ```
     - middleware
         ```
-        app.set('view engine', 'ejs');
-        app.use(methodOverride('_method'));
-        app.use(express.urlencoded({ extended: false })) 
-        app.use('/url', varController);
+        app.set('view engine', 'ejs'); // allow usage of ejs
+        app.use(methodOverride('_method')); // allow usage of non-post/get
+        app.use(express.urlencoded({ extended: false })) // allow usage of forms
+        app.use('/url', varController); // link to controller
         ```
     - start server
         ```
         app.listen(port, () => {
             console.log(`Example app listening at http://localhost:${port}`);
-            rowdyResults.print()
         });
         ```
 
@@ -72,23 +71,11 @@
 
 ## MVC-Practices
 
-1. Make a separate directory for models, views, and controller
-    -models = data, views = pages, controller = organization for server.js
-2. Models
-    - Create file for data (e.g. data.js)
-    - [Export the data then link it to page that needs it](#Linking)
-3. Views
-    - Create new .ejs under views directory for each page needed
-    - [Link to controller](#Linking)
-    - Display page with render, and pass required data
-        - e.g. res.render('show.ejs', { exportVarName: importVar })
-4. Controller
-    - Create file for controller (e.g. controller.js)
-    - [Link](#Linking)
-        - data
-        - server
-    - setup
-    - Routes will be placed here, e.g. our restful routes
+Make a separate directory for models, views, and controller
+- models = data
+- views = pages
+- controller = organization for server.js
+
 
 
 ## Restful-routes
@@ -124,6 +111,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
         ```
     - Edit
         - link to edit page with a tag
+- [back to table](#Restful-routes)
 ### new
 - create the route 
     ```
@@ -143,6 +131,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
             <br>
         </form>
     ```
+- [back to table](#Restful-routes)
 
     
 ### create
@@ -178,6 +167,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
     ```
         <p>The Capy at index <%=index%> is: oneItem.name</p>
     ```
+- [back to table](#Restful-routes)
 ### edit
 - create route
     ```
@@ -205,6 +195,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
         ```
         - checkbox contains ternary operator to set checkbox to checked or blank
 - need a route to handle the put action at update
+- [back to table](#Restful-routes)
 ### update
 - update route
     ```
@@ -223,6 +214,7 @@ Restful routes are a convention for certain URL pathways to do certain things.
             }
         ```
 - redirects to the page at the index
+- [back to table](#Restful-routes)
 ### destroy
 - route
     ```
@@ -231,11 +223,40 @@ Restful routes are a convention for certain URL pathways to do certain things.
         varName.splice(itemIndex, 1); //splice array at index
         res.redirect('/url');}) //redirect
     ```
+- [back to table](#Restful-routes)
 
 ## Optional
-- npm install --save rowdy-logger
-    - var rowdy = require('rowdy-logger')
-    - var rowdyResults = rowdy.begin(app)
-    - rowdyResults.print()
+- Rowdy Logger to view Routes
+    - install rowdy in main directory
+        ```
+        npm install --save rowdy-logger
+        ```
+    - inside server.js
+        ```
+            var rowdy = require('rowdy-logger') //modules
+            var rowdyResults = rowdy.begin(app)
+        ```
+    - inside listen method
+        ```
+         rowdyResults.print()
+        ```
+- Linking CSS
+    - copy pasted instructions from search
+        - Create a new folder named 'public' if none exists. 
+        - Create a new folder named 'css' under the newly created 'public' folder
+        - create your css file under the public/css path
+        - On your html link css i.e <link rel="stylesheet" type="text/css" href="/css/style.css">
+        // note the href uses a slash(/) before and you do not need to include the 'public'
+        - On your app.js include : app.use(express.static('public'));
+    - relevant code
+        - middleware
+            ```
+            app.use(express.static(__dirname + '/public'));
+            ```
+        - in html(.ejs) files
+            ```
+            <link rel="stylesheet" type="text/css" href="css/style.css" />
+            ```
 
 ## Linking 
+In general linking is done by exporting the target file and then using a require statement in the desired location.
