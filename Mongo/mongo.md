@@ -1,9 +1,12 @@
-
-
-
-npm install mongoose
-models
-- connection file
+## Navigation
+-  [Setup](#Setup)
+-  [Connect to Database](#Connect-to-Database)
+-  [Schema](#Schema)
+-  [Queries](#Queries)
+## Setup
+- npm install mongoose
+## Connect-to-Database
+Connection file connects to the MongoDB
 - db.js
     - connect to database
     ```
