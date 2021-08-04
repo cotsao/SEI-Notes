@@ -41,8 +41,9 @@ Connection file connects to the MongoDB
         ```
         const exampleSchema = new Schema({
             stringA: { type:String, required: true}, //required
-            stringB: String, // not required,
-            arr: [{str: String, num: Number}], // arr w/ object with string/num
+            stringB: { type: String, default: 'str' }, //set default to str
+            arr: [{type: String, type: Number}], // arr w/ object with string/num
+            date: {type: Date}, // date object
             bool: Boolean
             obj: {
                 str: String,
@@ -50,6 +51,7 @@ Connection file connects to the MongoDB
             }
         })
         ```
+        - [validators](https://mongoosejs.com/docs/validation.html)  exists to do things such as set minimum length
     - create a class with specified schema
         ```
         const Example = mongoose.model('Example', exampleSchema)
