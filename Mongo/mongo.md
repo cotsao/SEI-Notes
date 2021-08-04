@@ -31,6 +31,7 @@ Connection file connects to the MongoDB
         console.log(`Mongoose connected to ${connectionString}`);
     });
     ```
+## Schema
 - schema (Example.js)
     ```
     const mongoose = require('mongoose'); //require mongoose package
@@ -53,10 +54,11 @@ Connection file connects to the MongoDB
         ```
         const Example = mongoose.model('Example', exampleSchema)
         ```
-    - export the Schema
+    - export the Schema 
         ```
         module.exports = Example
         ```
+## Queries
 - Querying the Database
     - Queries are typically done in the controller
     - setup
@@ -114,10 +116,3 @@ Connection file connects to the MongoDB
                 ```
         - Combining methods
 
-
-
-
-    
-
-    export schema and import to index.js
-    controller runs database(mongo) methods
