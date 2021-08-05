@@ -83,6 +83,7 @@ const Example = mongoose.model('collection', Schema);
     ```
     const express = require('express')         
     const methodOverride = require('method-override');
+    const rowdy = require('rowdy-logger')
     ```
 - link controller
     ```
@@ -92,6 +93,7 @@ const Example = mongoose.model('collection', Schema);
     ```
     const app = express() 
     const port = 4000
+    const rowdyResults = rowdy.begin(app)
     ```
 - middleware
     ```
