@@ -8,40 +8,45 @@
 - [index.js](#index.js)
 - [Model-Schema](#Model-Schema)
 - [Views](#Views)
+- [Routes](#Routes)
 - [Restful-Routes](#Restful-Routes)
 
 ## Installations-and-Setup
-1. 
+1. create new npm package
     ```
     npm init
     ```
-    - create new npm package
-2. 
+ 
+2. install express
     ```
     npm install express
     ```
-    - install express
-3. 
+3. install ejs
     ```
     npm install ejs
     ```
-    - install ejs
-4. 
+4. install necessary package to use methods that aren't 'get' and 'post'
     ```
     npm install method-override
     ```
-    - install necessary package to use methods that aren't 'get' and 'post'
-5. 
+5. install mongoose
     ```
     npm install mongoose
     ```
-    - install mongoose
 6. Create .gitignore 
     ```
     touch .gitignore
     ```
     - add node_modules and whatever else 
-6. Optional Rowdy
+7. start mongo 
+    ```
+    sudo service mongodb start
+    ```
+8. create git repository
+    ```
+    git init
+    ```
+9. Optional Rowdy
     ```
     npm install --save rowdy-logger
     ```
@@ -103,7 +108,7 @@ const Example = mongoose.model('collection', Schema);
     ```
 - configuration
     ```
-    app.set('view engine', 'ejs'); // allow usage of ejs (changes express default view engine to render ejs template to html)
+    app.set('view engine', 'ejs'); // changes express default view engine to ejs
     ```
 - homepage
     ``` 
@@ -125,7 +130,7 @@ const Example = mongoose.model('collection', Schema);
     const db = require('../models/index.js')
     const router = express.Router();
     ```
-- contains whatever routes we want to use, ex [Restful-Routes](#Restful-Routes)
+- contains whatever routes we want to use, e.g. [Restful-Routes](#Restful-Routes)
 - export
     ```
     module.exports = router;
@@ -188,6 +193,25 @@ const Example = mongoose.model('collection', Schema);
     ```
     module.exports = Example
     ```
+
+## Routes
+General route notes:
+
+It is a good idea to add navigation links to different routes in each of your pages. e.g.
+
+```
+<header>
+    <nav>
+        <ul>
+            <li><a href="/url">All items</a></li>
+            <li><a href="/url/new">Create a items</a></li>
+        </ul>
+    </nav>
+</header>
+```
+ejs partials
+
+
 ## Views
 
 ### Restful Routes
@@ -200,6 +224,44 @@ const Example = mongoose.model('collection', Schema);
 | /url/:id/edit | GET       | [edit](#edit)       | Retrieve a item and a prepopulated form that can be used to edit that item
 | /url/:id      | PATCH/PUT | [update](#update)    | Send data to update an existing item
 | /url/:id      | DELETE    | [destroy](#destroy)  | Remove a item
+
+Note by default express will start looking for ejs files in the views directory. Some modifications to filepaths may be necessary to render the right .ejs
+
+Also note that with 
+
+```
+app.set('view engine', 'ejs')
+```
+the default view engine has been set to .ejs, so 
+
+```
+res.render('/templates/index.ejs')
+```
+can be simply written as  
+```
+res.render('/templates/index')
+```
+with the same result.
+```
+app.set('views', './views') // default
+res.render('index.ejs') // looks for /views/index.ejs
+res.render('/templates/index.ejs') //looks for /views/templates/index/ejs.
+app.set('views', './templates') //changes default to templates
+res.render('index.ejs') // looks for /templates/index.ejs
+```
+
+Finally, note that we are calling Express methods, so depending on the file, the variable calling the methods may change.
+```
+const express = require('express');
+const router = express.Router();
+//will use
+router.get...
+const express = require('express')   
+const app = express()
+//will use
+app.get...
+```
+
 #### index
 [index.ejs](#index.ejs)  
 ```
