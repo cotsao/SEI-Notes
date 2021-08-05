@@ -5,6 +5,10 @@
 -  [Queries](#Queries)
 ## Setup
 - npm install mongoose
+- start mongo 
+    ```
+    sudo service mongodb start
+    ```
 ## Connect-to-Database
 Connection file connects to the MongoDB
 - db.js
@@ -24,6 +28,7 @@ Connection file connects to the MongoDB
 	    useCreateIndex: true,
 	    useFindAndModify: false,
     });
+    mongoose.connection.close(); // close connection
     ```
     - listen for connection
     ```
@@ -70,6 +75,7 @@ Connection file connects to the MongoDB
         ```
     - Methods
         - [Mongoose Queries](https://mongoosejs.com/docs/queries.html)
+        - [Query Operators](https://docs.mongodb.com/manual/reference/operator/query/)
         - Find
             ```
             Example.find({},(err,allExamples)=>{

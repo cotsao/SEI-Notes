@@ -18,6 +18,7 @@
 5. npm install 
     - installs dependencies in package.json
     - not needed if creating new server from scratch
+5.
 ## Setup
 - Server.js
     - required modules
@@ -35,12 +36,15 @@
         const app = express() 
         const port = 4000
         ```
-    - middleware
-        ```
-        app.set('view engine', 'ejs'); // allow usage of ejs
-        app.use(methodOverride('_method')); // allow usage of non-post/get
-        app.use(express.urlencoded({ extended: false })) // allow usage of forms
+    - middleware // app.use = middleware, interecepts before other app methods and does whatever
+        ```        
+        app.use(methodOverride('_method')); // allow usage of non-post/get changes verb to match what we "actually" want
+        app.use(express.urlencoded({ extended: false })) // allow usage of forms puts form data into req.body
         app.use('/url', varController); // link to controller
+        ```
+    - configuration
+        ```
+        app.set('view engine', 'ejs'); // allow usage of ejs (changes express default view engine to render ejs template to html)
         ```
     - start server
         ```
