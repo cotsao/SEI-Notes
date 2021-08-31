@@ -12,6 +12,7 @@
     - [Create](#Create)
     - [Delete](#Delete)
     - [Update/Edit](#Update/Edit)
+- [File tree/Hierarchy/Summary](#File-tree/Hierachy)
 ## Setup
 
 Create React app
@@ -605,3 +606,88 @@ Finally, update our model with the update method.
     return request;
   };
 ```
+## File Tree/Hierachy
+```
+ src
+  ├─
+  ├── App.css
+  ├── App.js
+  ├── App.test.js
+  ├── components
+  │   ├── CreateTodoForm.jsx
+  │   ├── Header.jsx
+  │   ├── Home.jsx
+  │   ├── Todo.jsx
+  │   ├── TodoForm.jsx
+  │   └── Todos.jsx
+  ├── config
+  │   └── routes.js
+  ├── containers
+  │   └── TodosContainer.jsx
+  ├── images
+  │   ├── grass.jpg
+  │   └── grass.jpg:Zone.Identifier
+  ├── index.css
+  ├── index.js
+  └─── models
+       └── Todo.js
+```
+
+![component hierachy](/images/react/todoapp-tree.png)
+
+Our root has a very simple hierachy as so.
+
+
+
+### TodosContainer 
+TodosContainer is where most of the work is done.
+![Todo Container](/images/react/component-hierachy-tree.png)
+
+- Contains state with the array of Todos that is passed down as props to Todos
+- Makes an api call on component creation with componentDidMount() and sets it to the state
+- contains create method and passes it down as props to CreateTodoForm
+- contains update and remove methods and passes them down as props to Todos
+### TodoModel
+- TodoModel ```/src/config/Todo.js```
+  - Class that contains the axios methods and the endpoint
+    - get/post/delete/put = index/create/delete/update
+### CreateTodoForm
+- CreateTodoForm ```/src/components/CreateTodoForm```
+  - Receives ```createTodo()``` as props
+  - Form to create new Todo
+  - Contains state that has the value of the form input
+    - onChange in input field, calls function to set state to input field, and sets input field to match
+  - OnSubmit, calls the createTodo function that was passed down as props
+### Todos
+- Todos.jsx ```/src/components/Todos```
+  - Receives the ```todo``` array, ```deleteTodo()``` and ```updateTodo()``` as props
+  - Maps the received props to individual Todo components.
+    - Creates an unordered list with Todos and passes down a key, the data from one element of the received props, and both the update and the delete methods.
+### Todo
+- Todo.jsx ```/src/components/Todo```
+  - Receives the ```todo``` array, ```deleteTodo()``` and ```updateTodo()``` as props
+  - Contains formStyle as state
+    - css style to toggle display
+    - contains method to toggle display between 'none' and 'block'
+  - Creates a list element that contains
+    - unique item index
+    - todo data
+    - delete button
+    - edit button
+      - edit button calls toggle display function
+      - display contains TodoForm
+        - passes the ```updateTodo()``` and ```toggleBodyForm()``` down as props
+### TodoForm
+- TodoForm.jsx ```/src/components/TodoForm```
+  - Receives one ```todo```, ```toggleBodyForm()``` and ```updateTodo()``` as props
+  - Form to update Todo
+    - Contains state that has the value of the form input
+    - onChange in input field, calls function to set state to input field, and sets input field to match
+   - OnSubmit
+    - creates temp variable and set it to ```props.todo``` 
+      - change the temp variable body to match value from form
+    - calls the updateTodo function that was passed down as props
+    - resets local state
+    - calls ```toggleBodyForm()``` to toggle visibility
+
+  
