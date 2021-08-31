@@ -173,7 +173,7 @@ const Example = mongoose.model('collection', Schema);
     ```
 - define the Schema
     ```
-    const exampleSchema = new Schema({
+    const exampleSchema = new mongoose.Schema({
             stringA: { type:String, required: true}, //required
             stringB: { type: String, default: 'str' }, //set default to str
             arr: [{type: String, type: Number}], // arr w/ object with string/num
