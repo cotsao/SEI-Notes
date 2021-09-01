@@ -1,73 +1,214 @@
-## Navigation
--  [Setup](#Setup)
--  [React Router](#React-Router)
--  [Components](#Components)
-    - [Components and Props](#Components-and-Props)
-    - [Class Components](#Class-Components)
-    - [Function Components](#Function-Components)
-    - [Hooks](#Hooks)
-    - [Organization](#Organization)
--  [AJAX/API](#AJAX/API)
--  [CRUD](#CRUD)
-    - [Create](#Create)
-    - [Delete](#Delete)
-    - [Update/Edit](#Update/Edit)
-- [File tree/Hierarchy/Summary](#File-tree/Hierachy/Summary)
-- [Adding Express](#Express)
+# Navigation
+[Backend](#Backend)
+
+[Frontend](#Frontend)
+
+# Backend
+
+
 ## Setup
 
-Create React app
+1. create npm package ```npm init```
+2. install express ```npm install express```
+3. install mongoose ```npm install mongoose```
+3. install cors ```npm install cors```
+5. create .gitignore
+6. start mongodb ```sudo service mongodb start```
+7. git ```git init```
+## Server.js
+1. imports
+    - express ```const express = require('express')```
+    - cors ```const cors = require('cors');```
+    - controllers ```const Controller = require('./controllers/Controller')```
+2. variables
+    - ```const port = process.env.PORT || 4000;```
+    - ```const app = express();```
+3. middleware
+    - ```app.use(cors()) ```
+    - ```app.use(express.json())```
+4. set Routes
+    - ```app.use('/api/url', urlController);```
+5. listen
+    - ```
+        app.listen(port, () => {
+            console.log(`Server is running on port localhost:${port}`)
+        });
+        ```
+## Models directory
+### index.js
+setup mongoose
 ```
-npx create-react-app my-app-name
-```
+const mongoose = require('mongoose');
 
-Install react Express
-```
-npm i react-router-dom
-```
-Start React
-```
-npm start
-```
-## React Router
+const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/gamelib';
 
-React Router allows us to simulate different routes in our app.
+const configOptions = {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+};
 
-Import it into index.js
+// Connects to MongoDB
+mongoose.connect(connectionString, configOptions)
+  .then(() => console.log('MongoDB successfully connected...'))
+  .catch((err) => console.log(`MongoDB connection error: ${err}`));
+
+//export to controller
+module.exports = {
+  ModelName: require('./ModelName'),
+};
 ```
-// imports it under the variable name "Router"
+### Model.js
+Create Schema
+```
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const SchemaName = new Schema({
+  <!-- title: String,
+  publisher: String,
+  coverArtUrl: String,
+  completed: Boolean, --> //stuff
+});
+
+const ModelName = mongoose.model('ModelName', ModelSchema);
+
+module.exports = ModelName;
+```
+## Controllers
+create router and REST routes
+1. imports
+    ```
+    const router = require('express').Router();
+    const db = require('../models');
+    ```
+2. routes - base url defined in server.js (/api/url)
+    - Index - GET /api/url
+    ```
+    router.get('/', (req, res) => {
+        db.ModelName.find({}, (err, foundItems) => {
+            if (err) return console.log(err);
+            
+            res.send("Hit the index route");
+        });
+    });
+    ```
+    - show - GET /api/url/:id
+    ```
+    router.get('/:id', (req, res) => {
+        db.ModelName.findById(req.params.id, (err, foundItem) => {
+            if (err) return console.log(err);
+            
+            res.send("Hit the show route");
+        });
+    });
+    ```
+    - create - POST /api/url
+    ```
+    router.post('/', (req, res) => {
+        db.ModelName.create(req.body, (err, savedItem) => {
+            if (err) return console.log(err);
+            
+            res.send("Hit the create route");
+        });
+    });
+    ```
+    - update -PUT /api/url/:id
+    ```
+    router.put('/:id', (req, res) => {
+        db.ModelName.findByIdAndUpdate(
+            req.params.id, // finds the Game with id passed in from URL
+            req.body, // passes in data to update a game from the req.body
+            {new: true}, // We want to updated game returned in the callback
+            (err, updatedGame) => { // function called after update completes
+            if (err) return console.log(err);
+            
+            res.send("Hit the update route");
+            });
+    });
+    ```
+    - destroy - DELETE /api/url/:id
+    ```
+    router.delete('/:id', (req, res) => {
+        db.ModelName.findByIdAndDelete(req.params.id, (err, deletedItem) => {
+            if (err) return console.log(err);
+
+            res.send("Hit the destroy route");
+        });
+    });
+    ```
+3. export router ```module.exports = router;```
+
+# Frontend
+## Setup
+
+Create React app ```npx create-react-app my-app-name```
+
+Install react Express ```npm i react-router-dom```
+
+Start React ```npm start```
+## /src/index.js
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-```
-Wrap App in the React Router.
-```
-// stil index.js
+import App from './App';
+import './index.css';
+
 ReactDOM.render(
   <React.StrictMode>
-    <Router >
+    <Router>  
       <App />
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
 ```
-Make routes inside of our root page. (app.js)
+## /src/App.jsx
+Handle routes with config
+```
+import React from 'react';
+import Header from './components/Header';
+import Routes from './config/Routes';
+import './App.css';
 
-To do so, we use the Switch component to wrap the pages that we want to be able to switch between, so import Switch.
+function App() {
+  return (
+    <div>
+      <Header />
+      <Routes /> 
+    </div>
+  );
+}
+
+export default App;
 ```
-// import both Switch and Route
-import { Switch, Route } from 'react-router-dom';
+## /src/config/Routes.jsx
+imports:
+    ```
+    import React from 'react';
+    import { Switch, Route } from 'react-router-dom';
+    ```
+    Also, import whatever pages are being controlled here.
+
+component:
 ```
-Now we can wrap our routes in the Switch component
-```
-<div className="container">
-    <Header/>
+
+function Routes() {
+  return (
     <Switch>
-        // <Route path='route' compoment={component to render}>
-        <!-- It will look for partial matches as well, so our home route must have 'exact' to ensure it does not render when we don't want it to -->
-        <Route exact path='/' component={ Home }/>
-        <Route path='/todos' component={ TodosContainer }/>
+      <Route exact path='/' component={HomePage} />
+      <Route exact path='/url' component={ListPage} />
+      {/* Below we are taking the props from the Route component */}
+      {/* and passing to the ShowPage component */}
+      {/* This will allow us to acces the :id from the URL */}
+      <Route path='/url/:id' render={(props) => <ShowPage {...props} />} />
     </Switch>
-</div>
+  );
+}
+
+export default Routes;
 ```
 ### Linking to routes
 Note that any component we want to be rendered throughout all pages should be outside of the Switch component. Import Link and set the routes.
@@ -637,59 +778,3 @@ Finally, update our model with the update method.
 ![component hierachy](/images/react/todoapp-tree.png)
 
 Our root has a very simple hierachy as so.
-
-
-
-### TodosContainer 
-TodosContainer is where most of the work is done.
-![Todo Container](/images/react/component-hierachy-tree.png)
-
-- Contains state with the array of Todos that is passed down as props to Todos
-- Makes an api call on component creation with componentDidMount() and sets it to the state
-- contains create method and passes it down as props to CreateTodoForm
-- contains update and remove methods and passes them down as props to Todos
-### TodoModel
-- TodoModel ```/src/config/Todo.js```
-  - Class that contains the axios methods and the endpoint
-    - get/post/delete/put = index/create/delete/update
-### CreateTodoForm
-- CreateTodoForm ```/src/components/CreateTodoForm```
-  - Receives ```createTodo()``` as props
-  - Form to create new Todo
-  - Contains state that has the value of the form input
-    - onChange in input field, calls function to set state to input field, and sets input field to match
-  - OnSubmit, calls the createTodo function that was passed down as props
-### Todos
-- Todos.jsx ```/src/components/Todos```
-  - Receives the ```todo``` array, ```deleteTodo()``` and ```updateTodo()``` as props
-  - Maps the received props to individual Todo components.
-    - Creates an unordered list with Todos and passes down a key, the data from one element of the received props, and both the update and the delete methods.
-### Todo
-- Todo.jsx ```/src/components/Todo```
-  - Receives the ```todo``` array, ```deleteTodo()``` and ```updateTodo()``` as props
-  - Contains formStyle as state
-    - css style to toggle display
-    - contains method to toggle display between 'none' and 'block'
-  - Creates a list element that contains
-    - unique item index
-    - todo data
-    - delete button
-    - edit button
-      - edit button calls toggle display function
-      - display contains TodoForm
-        - passes the ```updateTodo()``` and ```toggleBodyForm()``` down as props
-### TodoForm
-- TodoForm.jsx ```/src/components/TodoForm```
-  - Receives one ```todo```, ```toggleBodyForm()``` and ```updateTodo()``` as props
-  - Form to update Todo
-    - Contains state that has the value of the form input
-    - onChange in input field, calls function to set state to input field, and sets input field to match
-   - OnSubmit
-    - creates temp variable and set it to ```props.todo``` 
-      - change the temp variable body to match value from form
-    - calls the updateTodo function that was passed down as props
-    - resets local state
-    - calls ```toggleBodyForm()``` to toggle visibility
-
-  
-## Adding Express
